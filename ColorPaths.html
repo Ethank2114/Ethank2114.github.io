@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Color Paths</title>
+	<style>
+		.button {
+			width: 600px;
+			height:  30px;
+			font-size:  14px;
+			background-color:  cyan;
+		}
+		.slider {
+			width: 500px;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas" width="600" height="600"></canvas>
+	<!--<canvas id="canvas" width="1920" height="1080"></canvas>-->
+	<div>
+		<button id="iterate" type="button" class="button" value="iterate" onclick="refresh()"></button>
+	</div>
+	<div>
+		<form>
+			<lable for="tileSizeInput">Tile Size:</lable>
+			<input type="range" min="1" max="100" step="1" value="10" class="slider" id="tileSizeInput">
+			<span id="tileSizeOutput">10</span><br>
+			<input type="button" value="submit" onclick="pushChanges()">
+		</form>
+	</div>
+
+	<script>
+		// tileSize slider value script
+		var slider = document.getElementById("tileSizeInput");
+		var out = document.getElementById("tileSizeOutput");
+		slider.oninput = function() {
+			out.innerHTML = slider.value;
+		}
+	</script>
+	
+	<script type="text/javascript">
+		const canvas = document.getElementById("canvas");
+		const frame = canvas.getContext("2d");
+
+		var tileSize = 10;
+		const defColor = "rgb(33, 33, 33)";
+
+		var map = [];
+		var seeds = [];
+
+		
+		var intervalPointer;
+		const speed = 10;//50;
+
+		
+
+		var randInt = function(min, max) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		var randColor = function() {
+			let r = randInt(0, 255);
+			let g = randInt(0, 255);
+			let b = randInt(0, 255);
+
+			return "rgb(" + r.toString() + ", "+ g.toString() + ", " + b.toString() + ")"; 
+		}
+
+		// create set with all divisors of num
+		var divsOf = function(num) {
+			let set = new Set();
+			for(var i = 1; i < num; i++) {
+				if(num % i == 0) {
+					set.add(i);
+				}
+			}
+			return set;
+		}
+		
+		var drawRect = function(x, y, width, height, color) {
+			frame.fillStyle = color
+			frame.fillRect(x, y, width, height)
+		}
+
+		var populateMap = function() {
+			map = [];
+			for(var x = 0; x < canvas.width / tileSize; x++) {
+				let temp = [];
+				for(var y = 0; y < canvas.height / tileSize; y++) {
+					temp.push({x:x, y:y, color:defColor});
+				}
+				map[x] = temp;
+			}
+		}
+
+		var clearMap = function() {
+			//seeds = [];
+			for(var x = 0; x < map.length; x++) {
+				for(var y = 0; y < map[0].length; y++) {
+					map[x][y].color = defColor;
+				}
+			}
+		}
+
+		var populateSeeds = function(num = 4) {
+			seeds = [];
+
+			for(var i = 0; i < num; i++) {
+
+				let num1 = randInt(0, Math.floor(canvas.width / tileSize) - 1);
+				let num2 = randInt(0, Math.floor(canvas.height / tileSize) - 1);
+	
+				seeds.push(map[num1][num2]);
+				map[num1][num2].color = randColor();//"rgb(235, 52, 186)";
+			}
+		}
+
+		var refresh = function(seeds) {
+			populateMap();
+			populateSeeds(seeds);
+			drawMap();
+		}
+
+
+		let w = divsOf(canvas.width);
+		let h = divsOf(canvas.height);
+		var divsOfScreen = new Set();
+
+		h.forEach(function(num) {
+			if(w.has(num)) {
+				divsOfScreen.add(num);
+			};
+		});
+
+		w.forEach(function(num) {
+			if(h.has(num)) {
+				divsOfScreen.add(num);
+			};
+		});
+
+		//console.log(divsOfScreen);
+
+		var pushChanges = function() {
+
+			let newTileSize = document.getElementById("tileSizeInput").value;
+
+			while(!divsOfScreen.has(newTileSize)) {
+				newTileSize++;
+			}
+
+			//console.log(newTileSize);
+
+			tileSize = newTileSize;
+
+
+			refresh();
+		}
+
+		var drawMap = function() {
+			map.forEach(function(array) {
+				//console.log(array);
+				array.forEach(function(e) {
+					//console.log(e);
+					drawRect(e.x * tileSize, e.y * tileSize, tileSize, tileSize, e.color);
+				})
+			});
+		}
+
+		var mixColor = function(oldString, strength) {
+
+			let rgb = oldString.substring(4, oldString.length - 1).replace(/ /g, '').split(',');
+			let shift = randInt(-1 * strength, strength);
+			
+			let part = randInt(0, 2);
+			rgb[part] = (parseInt(rgb[part]) + shift).toString();
+
+			//rgb[0] = (parseInt(rgb[0]) + randInt(-1 * strength, strength)).toString();
+			//rgb[1] = (parseInt(rgb[1]) + randInt(-1 * strength, strength)).toString();
+			//rgb[2] = (parseInt(rgb[2]) + randInt(-1 * strength, strength)).toString();
+
+			return "rgb(" + rgb[0].toString() + ", "+ rgb[1].toString() + ", " + rgb[2].toString() + ")";  
+
+
+		}
+
+		let grid = [{x:1,y:0}, {x:-1,y:0}, {x:0,y:1}, {x:0,y:-1}];
+
+		var iterate = function() {
+			let temp = [];
+			seeds.forEach(function(s) {
+
+				let adj = [];
+
+				// select random number of neighbours to check
+				for(var i = 0; i < grid.length; i++) {
+					if(randInt(0, 1) < 1) {
+						adj.push(grid[i]);
+					}
+				}
+
+				// spread color to chosen neighbours
+				for(var i = 0; i < adj.length; i++) {
+
+					if(s.x + adj[i].x < 0 || s.y + adj[i].y < 0) {
+						continue;
+					}
+					if(s.x + adj[i].x >= canvas.width / tileSize || s.y + adj[i].y >= canvas.height / tileSize) {
+						continue;
+					}
+
+					let current = map[s.x + adj[i].x][s.y + adj[i].y];
+
+					if(current.color == defColor) {
+						temp.push(current);
+						current.color = mixColor(s.color, 25);
+					}
+				}
+
+				for(var i = 0; i < grid.length; i++) {
+
+					if(s.x + grid[i].x < 0 || s.y + grid[i].y < 0) {
+						continue;
+					}
+					if(s.x + grid[i].x >= canvas.width / tileSize || s.y + grid[i].y >= canvas.height / tileSize) {
+						continue;
+					}
+
+					if(map[s.x + grid[i].x][s.y + grid[i].y].color == defColor) {
+						temp.push(s);
+					}
+				}
+
+			});
+
+			seeds = temp;
+			drawMap();
+		}
+
+		refresh(4);
+		intervalPointer = setInterval(iterate, speed);
+
+		//console.log(divsOf(1024));
+
+	</script>
+</body>
+</html>
