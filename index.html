@@ -3,56 +3,135 @@
 <head>
 	<title>Color Paths</title>
 	<style>
-		.button {
+		.inputContainer {
 			width: 600px;
+		}
+		.button {
+			width: 100%;
 			height:  30px;
 			font-size:  14px;
+			font-weight: bold;
 			background-color:  cyan;
 		}
 		.slider {
-			width: 500px;
+		  	-webkit-appearance: none;  /* Override default CSS styles */
+		  	appearance: none;
+		  	width: 50%; /* Full-width */
+		  	height: 25px; /* Specified height */
+		  	background: #d3d3d3; /* Grey background */
+		  	/*outline: none;  Remove outline */
+		  	/*opacity: 0.7;  Set transparency (for mouse-over effects on hover) */
+		  	/*-webkit-transition: .2s;  0.2 seconds transition on hover */
+		  	/*transition: opacity .2s;*/
+		  	float: ;
 		}
+		.slider::-webkit-slider-thumb {
+ 			-webkit-appearance: none; /* Override default look */
+ 			appearance: none;
+ 			width: 25px; /* Set a specific slider handle width */
+ 			height: 25px; /* Slider handle height */
+ 			background: #04AA6D; /* Green background */
+ 		}
+		.lable {
+			margin-left: 10px;
+			float: left;
+		}
+		.span {
+			float: right;
+			margin-right: 10px;
+		}
+		.fieldDiv {
+			height: 30px;
+			margin: 2px;
+			padding: 5px;
+			width:  100%;
+		}
+		.center {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.subDiv {
+			width: 33.33%;
+			float: left;
+			text-align: center;
+		}
+
 	</style>
 </head>
 <body>
-	<canvas id="canvas" width="600" height="600"></canvas>
-	<!--<canvas id="canvas" width="1920" height="1080"></canvas>-->
-	<div>
-		<button id="iterate" type="button" class="button" value="iterate" onclick="refresh()"></button>
-	</div>
-	<div>
+	<!--<canvas id="canvas" width="600" height="600"></canvas>-->
+	<canvas id="canvas" width="1920" height="1080"></canvas>
+	<div class="inputContainer">
+		<button id="iterate" type="button" class="button" value="iterate" onclick="refresh()">Re-Generate</button>
 		<form>
-			<lable for="tileSizeInput">Tile Size:</lable>
-			<input type="range" min="1" max="100" step="1" value="10" class="slider" id="tileSizeInput">
-			<span id="tileSizeOutput">10</span><br>
-			<input type="button" value="submit" onclick="pushChanges()">
+			<div class="fieldDiv center" style="text-align: center">
+				<span style="width:20%">Tile Size:</span>
+				<input type="range" min="1" max="100" step="1" value="10" class="slider" style="width:60%" id="tileSizeInput">
+				<span id="tileSizeOutput" style="width:20%">10</span><br>	
+			</div>
+			<div class="fieldDiv center" style="text-align: center">
+				<span style="width:20%">Number of Seeds:</span>
+				<input type="range" min="1" max="100" step="1" value="5" class="slider" style="width:60%" id="numSeedsInput">
+				<span id="numSeedsOutput" style="width:20%">5</span><br>
+			</div>
+			<div class="fieldDiv center">
+				<div class="subDiv" style="width:20%">
+					<span>TimeBtwnSpreads:</span>
+				</div>
+				<div class="subDiv" style="width:60%">
+					<input type="range" min="1" max="100" step="1" value="10" class="slider" style="width: 100%" id="speedInput">
+				</div>
+				<div class="subDiv" style="width:20%">
+					<span id="speedOutput">10</span>
+				</div>
+			</div>
+			<div class="fieldDiv center" style="text-align: center">
+				<span style="width:20%">Col Mxin Strgth:</span>
+				<input type="range" min="0" max="100" step="1" value="25" class="slider" style="width:60%" id="mixingStrengthInput">
+				<span id="mixingStrengthOutput" style="width:20%">25</span><br>
+			</div>
+			<div class="fieldDiv center" style="text-align: center">
+				<span style="width:20%">Begining Color:</span>
+				<input type="text" style="width:60%" id="seedColorInput" value="random">
+				<span id="seedColorOutput" style="width:20%">Format:<br> rgb(r, g, b)</span><br>
+			</div>
+			
+
+			<input type="button" class="button" value="submit" onclick="pushChanges()">
 		</form>
 	</div>
 
 	<script>
 		// tileSize slider value script
-		var slider = document.getElementById("tileSizeInput");
-		var out = document.getElementById("tileSizeOutput");
-		slider.oninput = function() {
-			out.innerHTML = slider.value;
+		var slider1 = document.getElementById("tileSizeInput");
+		slider1.oninput = function() {
+			document.getElementById("tileSizeOutput").innerHTML = slider1.value;
+		}
+	</script>
+	<script>
+		// Number of Seeds slider value script
+		var slider2 = document.getElementById("numSeedsInput");
+		slider2.oninput = function() {
+			document.getElementById("numSeedsOutput").innerHTML = slider2.value;
+		}
+	</script>
+	<script>
+		// Speed slider value script
+		var slider3 = document.getElementById("speedInput");
+		slider3.oninput = function() {
+			document.getElementById("speedOutput").innerHTML = slider3.value;
+		}
+	</script>
+	<script>
+		// Color Mixing Strength slider value script
+		var slider4 = document.getElementById("mixingStrengthInput");
+		slider4.oninput = function() {
+			document.getElementById("mixingStrengthOutput").innerHTML = slider4.value;
 		}
 	</script>
 	
 	<script type="text/javascript">
-		const canvas = document.getElementById("canvas");
-		const frame = canvas.getContext("2d");
-
-		var tileSize = 10;
-		const defColor = "rgb(33, 33, 33)";
-
-		var map = [];
-		var seeds = [];
-
-		
-		var intervalPointer;
-		const speed = 10;//50;
-
-		
 
 		var randInt = function(min, max) {
 			return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -82,12 +161,33 @@
 			frame.fillRect(x, y, width, height)
 		}
 
+		// VARIABLES //
+
+		const canvas = document.getElementById("canvas");
+		const frame = canvas.getContext("2d");
+
+		var tileSize = 10;
+		var numSeeds = 5;
+		var speed = 10;
+		var seedColor = "random";
+		var mixingStrength = 25;
+
+		const backgroundColor = "rgb(33, 33, 33)";
+
+		var map = [];
+		var seeds = [];
+
+
+		var intervalPointer;
+
+		// VARIABLES //
+
 		var populateMap = function() {
 			map = [];
 			for(var x = 0; x < canvas.width / tileSize; x++) {
 				let temp = [];
 				for(var y = 0; y < canvas.height / tileSize; y++) {
-					temp.push({x:x, y:y, color:defColor});
+					temp.push({x:x, y:y, color:backgroundColor});
 				}
 				map[x] = temp;
 			}
@@ -97,7 +197,7 @@
 			//seeds = [];
 			for(var x = 0; x < map.length; x++) {
 				for(var y = 0; y < map[0].length; y++) {
-					map[x][y].color = defColor;
+					map[x][y].color = backgroundColor;
 				}
 			}
 		}
@@ -111,7 +211,7 @@
 				let num2 = randInt(0, Math.floor(canvas.height / tileSize) - 1);
 	
 				seeds.push(map[num1][num2]);
-				map[num1][num2].color = randColor();//"rgb(235, 52, 186)";
+				map[num1][num2].color = (seedColor == "random") ? randColor() : seedColor;//"rgb(235, 52, 186)";
 			}
 		}
 
@@ -142,18 +242,33 @@
 
 		var pushChanges = function() {
 
+			// Tile Size // 
 			let newTileSize = document.getElementById("tileSizeInput").value;
-
 			while(!divsOfScreen.has(newTileSize)) {
 				newTileSize++;
 			}
-
-			//console.log(newTileSize);
-
 			tileSize = newTileSize;
 
+			// Number of Seeds //
+			let newNumSeeds = document.getElementById("numSeedsInput").value;
+			numSeeds = newNumSeeds;
 
-			refresh();
+			// Speed //
+			let newSpeed = document.getElementById("speedInput").value;
+			speed = newSpeed;
+			clearInterval(intervalPointer);
+			intervalPointer = setInterval(iterate, speed);
+
+			// Seed Color //
+			let newSeedColor = document.getElementById("seedColorInput").value;
+			seedColor = newSeedColor;
+
+			// Color Mixing Strength //
+			let newMixingStrength = document.getElementById("mixingStrengthInput").value;
+			mixingStrength = newMixingStrength;
+
+			// refresh //
+			refresh(numSeeds);
 		}
 
 		var drawMap = function() {
@@ -210,9 +325,10 @@
 
 					let current = map[s.x + adj[i].x][s.y + adj[i].y];
 
-					if(current.color == defColor) {
+					if(current.color == backgroundColor) {
 						temp.push(current);
-						current.color = mixColor(s.color, 25);
+						current.color = mixColor(s.color, mixingStrength);
+						drawRect(current.x * tileSize, current.y * tileSize, tileSize, tileSize, current.color); // changed
 					}
 				}
 
@@ -225,7 +341,7 @@
 						continue;
 					}
 
-					if(map[s.x + grid[i].x][s.y + grid[i].y].color == defColor) {
+					if(map[s.x + grid[i].x][s.y + grid[i].y].color == backgroundColor) {
 						temp.push(s);
 					}
 				}
@@ -233,10 +349,10 @@
 			});
 
 			seeds = temp;
-			drawMap();
+			//drawMap(); // changed
 		}
 
-		refresh(4);
+		refresh(numSeeds);
 		intervalPointer = setInterval(iterate, speed);
 
 		//console.log(divsOf(1024));
