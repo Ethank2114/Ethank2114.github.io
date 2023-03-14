@@ -202,10 +202,10 @@
 			}
 		}
 
-		var populateSeeds = function(num = 4) {
+		var populateSeeds = function() {
 			seeds = [];
 
-			for(var i = 0; i < num; i++) {
+			for(var i = 0; i < numSeeds; i++) {
 
 				let num1 = randInt(0, Math.floor(canvas.width / tileSize) - 1);
 				let num2 = randInt(0, Math.floor(canvas.height / tileSize) - 1);
@@ -215,9 +215,9 @@
 			}
 		}
 
-		var refresh = function(seeds) {
+		var refresh = function() {
 			populateMap();
-			populateSeeds(seeds);
+			populateSeeds();
 			drawMap();
 		}
 
@@ -268,7 +268,7 @@
 			mixingStrength = newMixingStrength;
 
 			// refresh //
-			refresh(numSeeds);
+			refresh();
 		}
 
 		var drawMap = function() {
@@ -352,7 +352,7 @@
 			//drawMap(); // changed
 		}
 
-		refresh(numSeeds);
+		refresh();
 		intervalPointer = setInterval(iterate, speed);
 
 		//console.log(divsOf(1024));
