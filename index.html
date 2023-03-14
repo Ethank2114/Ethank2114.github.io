@@ -63,11 +63,11 @@
 	<!--<canvas id="canvas" width="600" height="600"></canvas>-->
 	<canvas id="canvas" width="1920" height="1080"></canvas>
 	<div class="inputContainer">
-		<button id="iterate" type="button" class="button" value="iterate" onclick="refresh()">Re-Generate</button>
+		<!--<button id="iterate" type="button" class="button" value="iterate" onclick="refresh()">Re-Generate</button>-->
 		<form>
 			<div class="fieldDiv center" style="text-align: center">
 				<span style="width:20%">Tile Size:</span>
-				<input type="range" min="1" max="100" step="1" value="10" class="slider" style="width:60%" id="tileSizeInput">
+				<input type="range" min="0" max="100" step="1" value="10" class="slider" style="width:60%" id="tileSizeInput">
 				<span id="tileSizeOutput" style="width:20%">10</span><br>	
 			</div>
 			<div class="fieldDiv center" style="text-align: center">
@@ -80,7 +80,7 @@
 					<span>TimeBtwnSpreads:</span>
 				</div>
 				<div class="subDiv" style="width:60%">
-					<input type="range" min="1" max="100" step="1" value="10" class="slider" style="width: 100%" id="speedInput">
+					<input type="range" min="0" max="100" step="1" value="10" class="slider" style="width: 100%" id="speedInput">
 				</div>
 				<div class="subDiv" style="width:20%">
 					<span id="speedOutput">10</span>
@@ -198,9 +198,9 @@
 		}
 
 		var clearMap = function() {
-			//seeds = [];
-			for(var x = 0; x < map.length; x++) {
-				for(var y = 0; y < map[0].length; y++) {
+			//console.log(tileSize);
+			for(var x = 0; x < canvas.width / tileSize; x++) {
+				for(var y = 0; y < canvas.height / tileSize; y++) {
 					map[x][y].color = backgroundColor;
 				}
 			}
@@ -220,9 +220,26 @@
 		}
 
 		var refresh = function() {
-			populateMap();
-			populateSeeds();
-			drawMap();
+
+			clearInterval(intervalPointer);
+
+			if(speed > 0) {
+				intervalPointer = setInterval(iterate, speed);
+
+				populateMap();
+				populateSeeds();
+				drawMap();
+
+			} else {
+				populateMap();
+				populateSeeds();
+
+				while(seeds.length > 0) {
+					iterate();
+				}
+
+				drawMap();
+			}
 		}
 
 
@@ -248,9 +265,13 @@
 
 			// Tile Size // 
 			let newTileSize = document.getElementById("tileSizeInput").value;
+			//console.log(newTileSize,"original");
 			while(!divsOfScreen.has(newTileSize)) {
+				//console.log(newTileSize,"before");
 				newTileSize++;
+				//console.log(newTileSize,"after");
 			}
+			//console.log(newTileSize,"final");
 			tileSize = newTileSize;
 
 			// Number of Seeds //
@@ -260,9 +281,7 @@
 			// Speed //
 			let newSpeed = document.getElementById("speedInput").value;
 			speed = newSpeed;
-			clearInterval(intervalPointer);
-			intervalPointer = setInterval(iterate, speed);
-
+			
 			// Seed Color //
 			let newSeedColor = document.getElementById("seedColorInput").value;
 			seedColor = newSeedColor;
@@ -356,6 +375,7 @@
 			//drawMap(); // changed
 		}
 
+		populateMap();
 		refresh();
 		intervalPointer = setInterval(iterate, speed);
 
