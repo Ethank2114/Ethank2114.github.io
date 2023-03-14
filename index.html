@@ -107,6 +107,7 @@
 		var slider1 = document.getElementById("tileSizeInput");
 		slider1.oninput = function() {
 			document.getElementById("tileSizeOutput").innerHTML = slider1.value;
+			pushChanges();
 		}
 	</script>
 	<script>
@@ -114,6 +115,7 @@
 		var slider2 = document.getElementById("numSeedsInput");
 		slider2.oninput = function() {
 			document.getElementById("numSeedsOutput").innerHTML = slider2.value;
+			pushChanges();
 		}
 	</script>
 	<script>
@@ -121,6 +123,7 @@
 		var slider3 = document.getElementById("speedInput");
 		slider3.oninput = function() {
 			document.getElementById("speedOutput").innerHTML = slider3.value;
+			pushChanges();
 		}
 	</script>
 	<script>
@@ -128,6 +131,7 @@
 		var slider4 = document.getElementById("mixingStrengthInput");
 		slider4.oninput = function() {
 			document.getElementById("mixingStrengthOutput").innerHTML = slider4.value;
+			pushChanges();
 		}
 	</script>
 	
