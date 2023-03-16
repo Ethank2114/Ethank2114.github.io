@@ -1,6 +1,6 @@
 var updateOutput = function(input, output) {
 	document.getElementById(output).innerHTML = input.value;
-	pushChanges();
+	refresh();
 }
 
 var leftArrow = function(input, output) {
