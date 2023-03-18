@@ -46,7 +46,7 @@ const backgroundColor = "rgb(33, 33, 33)";
 
 var tileSize = 10;
 var numSeeds = 5;
-var speed = 10;
+var speed = 1;
 var seedColor = "random";
 var mixingStrength = 25;
 
@@ -77,8 +77,8 @@ var swapMaps = function() {
 var printCanvas = function() {
 
 	let dateObj = new Date();
-	let date = dateObj.getFullYear() + "/" + (dateObj.getMonth() + 1) + "/" + dateObj.getDate();
-	let time = dateObj.getHours() + ":" + dateObj.getMinutes() + ":" + dateObj.getSeconds();
+	let date = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();
+	let time = dateObj.getHours() + "." + dateObj.getMinutes() + "." + dateObj.getSeconds();
 
   	var img = new Image();
   	saveAs(canvas.toDataURL(), date + "_" + time + ".png"); // from FileSaver.js
@@ -149,11 +149,13 @@ var refresh = function(stop = false) {
 		iterate();
 	}
 
-	pushChanges()
+	pushChanges();
 
 	clearInterval(intervalPointer);
 
 	if(speed > 0) {
+
+		//console.log(speed);
 
 		mapReady = false;
 		document.getElementById("refreshButton").style = "opacity: 20%;";
@@ -217,6 +219,9 @@ speed = newSpeed;
 			
 // Seed Color //
 let newSeedColor = hexToRGB(document.getElementById("seedColorInput").value);
+if(document.getElementById("randomColorCheckBox").checked) {
+	newSeedColor = "random";
+}
 seedColor = newSeedColor;
 
 // Color Mixing Strength //

@@ -27,9 +27,9 @@
 			<div class="fieldDiv center">				
 				<span style="width:20%; font-size:14px;">TimeBtwnSpreads:</span>
 				<input type="button" value="<" class="arrow" onclick="leftArrow('speedInput', 'speedOutput')">
-				<input type="range" min="0" max="100" step="1" value="10" class="slider" id="speedInput" oninput="updateOutput(this, 'speedOutput')">
+				<input type="range" min="0" max="1000" step="1" value="1" class="slider" id="speedInput" oninput="updateOutput(this, 'speedOutput')">
 				<input type="button" value=">" class="arrow" onclick="rightArrow('speedInput', 'speedOutput')">
-				<span id="speedOutput" style="width:20%;">10</span><br>
+				<span id="speedOutput" style="width:20%;">1</span><br>
 			</div>
 			<div class="fieldDiv center">
 				<span style="width:20%">Col Mxin Strgth:</span>
@@ -43,7 +43,7 @@
 				<input type="color" style="width:58%" id="seedColorInput" value="#04e0bc">
 				<div class="center" style="width:20%">
 					<span style="width:80%">Random</span>
-					<input type="checkbox" value="" style="width:20%">
+					<input type="checkbox" style="width:20%" checked="true" id="randomColorCheckBox">
 				</div>
 				
 				
