@@ -1,4 +1,5 @@
 // main.js
+// Ethan Kerr
 
 
 // Helper functions //
@@ -20,21 +21,21 @@ var randInt = function(min, max) {
 
 // Helper functions //
 
+margin = 100;
+turnFactor = 0.02;
+minSpeed = 1;
+maxSpeed = 1.5;
+avoidFactor = 0.001;
+centerFactor = 0.00008;
+matchFactor = 0.008;
+
+visRange = 100;
+protRange = 25;
+
+visRangeSquared = visRange * visRange;
+protRangeSquared = protRange * protRange;
+
 class Boid {
-
-	visRange = 100;
-	protRange = 25;
-
-	margin = 100;
-	turnFactor = 0.02;
-	minSpeed = 1;
-	maxSpeed = 1.5;
-	avoidFactor = 0.001;
-	centerFactor = 0.00008;
-	matchFactor = 0.008;
-
-	visRangeSquared = this.visRange * this.visRange;
-	protRangeSquared = this.protRange * this.protRange;
 	
 	constructor(x = 0, y = 0, vel = {x: 0, y:0}, color = "rgb(0, 200, 200)") {
 		this.x = x;
@@ -56,17 +57,22 @@ class Boid {
 		this.vyAvg = 0;
 		this.neighbours = 0;
 
+		// for every other boid
 		others.forEach(function(e) {
 			this.dx = this.x - e.x;
 			this.dy = this.y - e.y;
 
-			if(Math.abs(this.dx) < this.visRange && Math.abs(this.dy) < this.visRange) {
+			// if within visual range
+			if(Math.abs(this.dx) < visRange && Math.abs(this.dy) < visRange) {
 				this.distSquared = this.dx * this.dx + this.dy * this.dy;
 
-				if(this.distSquared < this.protRangeSquared) {
+				// if within protected range
+				if(this.distSquared < protRangeSquared) {
 					this.closeDx += this.dx;
 					this.closeDy += this.dy;
-				} else if(this.distSquared < this.visRangeSquared) {
+
+				// if outside protected range
+				} else if(this.distSquared < visRangeSquared) {
 					this.xAvg += e.x;
 					this.yAvg += e.y;
 					this.vxAvg += e.velocity.x;
@@ -77,38 +83,33 @@ class Boid {
 			}
 		}, this);
 
+		// if neighbours found
 		if(this.neighbours > 0) {
 			this.xAvg /= this.neighbours;
 			this.yAvg /= this.neighbours;
 			this.vxAvg /= this.neighbours;
 			this.vyAvg /= this.neighbours;
 
-			this.velocity.x += (this.xAvg - this.x) * this.centerFactor + (this.vxAvg - this.velocity.x) * this.matchFactor;
-			this.velocity.y += (this.yAvg - this.y) * this.centerFactor + (this.vyAvg - this.velocity.y) * this.matchFactor;
+			this.velocity.x += (this.xAvg - this.x) * centerFactor + (this.vxAvg - this.velocity.x) * matchFactor;
+			this.velocity.y += (this.yAvg - this.y) * centerFactor + (this.vyAvg - this.velocity.y) * matchFactor;
 		}
 
 		// Avoid others
-		this.velocity.x += this.closeDx * this.avoidFactor;
-		this.velocity.y += this.closeDy * this.avoidFactor;
-
-		//console.log(canvas.width, canvas.height);
+		this.velocity.x += this.closeDx * avoidFactor;
+		this.velocity.y += this.closeDy * avoidFactor;
 
 		// edge avoidance
-		if(this.x < this.margin) {
-			this.velocity.x += this.turnFactor;
-			//this.velocity.x *= -1;
+		if(this.x < margin) {
+			this.velocity.x += turnFactor;
 		}
-		if(this.x > canvas.width - this.margin) {
-			this.velocity.x -= this.turnFactor;
-			//this.velocity.x *= -1;
+		if(this.x > canvas.width - margin) {
+			this.velocity.x -= turnFactor;
 		}
-		if(this.y < this.margin) {
-			this.velocity.y += this.turnFactor;
-			//this.velocity.y *= -1;
+		if(this.y < margin) {
+			this.velocity.y += turnFactor;
 		}
-		if(this.y > canvas.height - this.margin) {
-			this.velocity.y -= this.turnFactor;
-			//this.velocity.y *= -1;
+		if(this.y > canvas.height - margin) {
+			this.velocity.y -= turnFactor;
 		}
 
 		// enfore min/max speed
@@ -116,13 +117,13 @@ class Boid {
 		let vy = this.velocity.y;
 		let speed = Math.sqrt(vx * vx + vy * vy);
 
-		if(speed < this.minSpeed) {
-			this.velocity.x *= this.minSpeed / speed;
-			this.velocity.y *= this.minSpeed / speed;
+		if(speed < minSpeed) {
+			this.velocity.x *= minSpeed / speed;
+			this.velocity.y *= minSpeed / speed;
 		}
-		if(speed > this.maxSpeed) {
-			this.velocity.x *= this.maxSpeed / speed;
-			this.velocity.y *= this.maxSpeed / speed;
+		if(speed > maxSpeed) {
+			this.velocity.x *= maxSpeed / speed;
+			this.velocity.y *= maxSpeed / speed;
 		}
 
 		// update position
@@ -139,7 +140,7 @@ class Boid {
 
 		let normal = {x: -1 * unit.y / 3, y: unit.x / 3};
 
-
+		// draw triangle
 		frame.fillStyle = this.color;
 		frame.beginPath();
 		frame.moveTo(Math.round(this.x), Math.round(this.y));
@@ -148,8 +149,6 @@ class Boid {
 		
 		frame.fill();
 
-
-		//drawRect(frame, this.x, this.y, 10, 10, "rgb(0, 200, 200)");
 	}
 
 }
@@ -163,6 +162,7 @@ class Game {
 		
 		this.intervalPointer = setInterval(this.gameTick, this.speed);
 
+		// populate game with entities
 		for(var i = 0; i < 500; i++) {
 			let randX = randInt(0, canvas.width);
 			let randY = randInt(0, canvas.height);
@@ -172,9 +172,15 @@ class Game {
 
 			let randV = {x: vx, y: vy};
 
+			//let r = 100 + randInt(0, 155);
+			//let g = 0;
+			//let b = randInt(0, 255);
+
 			let r = 0;
 			let g = randInt(0, 255);
 			let b = 100 + randInt(0, 155);
+
+			//let rgb = {r: 0, g: randInt(0,255), b:100 + randInt(0,155)}
 
 			let color = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")";
 
@@ -223,7 +229,6 @@ var gameSpeed = 1000 / 144;
 var c = document.getElementById("canvas")
 var theGame = new Game(c, gameSpeed);
 
-//var num1 = randInt(-5, 5);
-//var num2 = randInt(-5, 5);
-
-//theGame.entities.push(new Boid(c.width / 2,c.height / 2,{x:num1, y:num2}));
+//var gameSpeed2 = 1000 / 144;
+//var c2 = document.getElementById("canvas2")
+//var theGame = new Game(c2, gameSpeed2);
