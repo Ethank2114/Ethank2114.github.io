@@ -14,18 +14,42 @@ var drawRect = function(frame, x, y, width, height, color) {
 	frame.fillRect(x, y, width, height);
 }
 
-
 var randInt = function(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var randColor = function() {
+	let r = randInt(0, 255);
+	let g = randInt(0, 255);
+	let b = randInt(0, 255)
+	return "rgb(" + r.toString() + ", "+ g.toString() + ", " + b.toString() + ")"; 
+}
+
+var mixColor = function(oldString, strength) {
+	
+	let rgb = oldString.substring(4, oldString.length - 1).replace(/ /g, '').split(',');
+	//let shift = randInt(-1 * strength, strength);
+			
+	//let part = randInt(0, 2);
+	//rgb[part] = (parseInt(rgb[part]) + shift).toString();
+
+	for(let i = 0; i < 2; i++) {
+		rgb[i] = (parseInt(rgb[i]) + randInt(-1 * strength, strength)).toString();
+		while(rgb[i] < 0 || rgb[i] > 255) {
+			rgb[i] = randInt(0, 255);
+		}
+	}
+
+	return "rgb(" + rgb[0].toString() + ", "+ rgb[1].toString() + ", " + rgb[2].toString() + ")";  
 }
 
 // Helper functions //
 
 margin = 100;
 turnFactor = 0.02;
-minSpeed = 1;
-maxSpeed = 1.5;
-avoidFactor = 0.001;
+minSpeed = 0.5;
+maxSpeed = 2;
+avoidFactor = 0.002;
 centerFactor = 0.00008;
 matchFactor = 0.008;
 
@@ -161,8 +185,13 @@ class Game {
 		this.entities = [];
 		
 		this.intervalPointer = setInterval(this.gameTick, this.speed);
+	}
 
-		// populate game with entities
+	// populate game with entities
+	populate = (c = "random") => {
+		
+		this.entities = [];
+
 		for(var i = 0; i < 500; i++) {
 			let randX = randInt(0, canvas.width);
 			let randY = randInt(0, canvas.height);
@@ -176,13 +205,21 @@ class Game {
 			//let g = 0;
 			//let b = randInt(0, 255);
 
-			let r = 0;
-			let g = randInt(0, 255);
-			let b = 100 + randInt(0, 155);
+			var color;
 
-			//let rgb = {r: 0, g: randInt(0,255), b:100 + randInt(0,155)}
+			if(c == "random") {
+				/*let r = 100 + randInt(0, 155);
+				let g = 0;
+				let b = randInt(0, 255);
+			
+				//let rgb = {r: 0, g: randInt(0,255), b:100 + randInt(0,155)}
 
-			let color = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")";
+				color = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")";*/
+				color = randColor();
+			} else { 
+				//console.log(color);
+				color = mixColor(c, 50);
+			}
 
 			this.entities.push(new Boid(randX, randY, randV, color));
 		}
@@ -203,8 +240,8 @@ class Game {
 			this.canvas.width = window.innerWidth - 16;
 		}
 
-		if(this.canvas.height != window.innerHeight - 46) {
-			this.canvas.height = window.innerHeight - 46;
+		if(this.canvas.height != window.innerHeight - 16) {
+			this.canvas.height = window.innerHeight - 16;
 		}
 
 
@@ -228,6 +265,7 @@ class Game {
 var gameSpeed = 1000 / 144;
 var c = document.getElementById("canvas")
 var theGame = new Game(c, gameSpeed);
+theGame.populate("rgb(200,50,150)"); // "rgb(30,200,200)"
 
 //var gameSpeed2 = 1000 / 144;
 //var c2 = document.getElementById("canvas2")
