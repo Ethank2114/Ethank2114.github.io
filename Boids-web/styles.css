@@ -27,7 +27,7 @@ div.controllerBar {
 
 div.controls {
 	display: block;
-	width: 33%;
+	width: 60%;
 	height: 100%;
 	/*background: blue;*/
 	margin-left: auto;
@@ -57,7 +57,7 @@ input.arrow {
 }
 
 input.slider {
-	width:90%;
+	width:60%;
 	appearance: none;
 	background: grey;
 	border-width: 1px;
@@ -70,4 +70,28 @@ input.slider::-webkit-slider-thumb {
 	width: 25px;
 	height: 25px;
 	background: #04e0bc;
+}
+
+input.color {
+	width:70%;
+	background: grey;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+}
+
+label.controlLabel {
+	width: 20%;
+	color: white;
+	display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+span.sliderValue {
+	width: 20%;
+	color: white;
+	display: flex; 
+    justify-content: center;
+    align-items: center;
 }

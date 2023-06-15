@@ -21,11 +21,24 @@ var randInt = function(min, max) {
 var randColor = function() {
 	let r = randInt(0, 255);
 	let g = randInt(0, 255);
-	let b = randInt(0, 255)
+	let b = randInt(0, 255);
 	return "rgb(" + r.toString() + ", "+ g.toString() + ", " + b.toString() + ")"; 
 }
 
+var hexToRGB = function(hex) {
+	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  	return result ?  "rgb(" +
+    	parseInt(result[1], 16) + ", " +
+    	parseInt(result[2], 16) + ", " +
+    	parseInt(result[3], 16) + ")"
+  	 : null;
+}
+
 var mixColor = function(oldString, strength) {
+
+	if(oldString[0] === "#") {
+		oldString = hexToRGB(oldString);
+	}
 	
 	let rgb = oldString.substring(4, oldString.length - 1).replace(/ /g, '').split(',');
 	//let shift = randInt(-1 * strength, strength);
@@ -35,29 +48,44 @@ var mixColor = function(oldString, strength) {
 
 	for(let i = 0; i < 2; i++) {
 		rgb[i] = (parseInt(rgb[i]) + randInt(-1 * strength, strength)).toString();
-		while(rgb[i] < 0 || rgb[i] > 255) {
-			rgb[i] = randInt(0, 255);
+
+		if(rgb[i] < 0) {
+			rgb[i] = 0;
 		}
+		if(rgb[i] > 255) {
+			rgb[i] = 255;
+		}
+
+		// while(rgb[i] < 0 || rgb[i] > 255) {
+		// 	rgb[i] = randInt(0, 255);
+		// }
 	}
 
 	return "rgb(" + rgb[0].toString() + ", "+ rgb[1].toString() + ", " + rgb[2].toString() + ")";  
 }
 
-// Helper functions //
+//* Helper functions *//
+
+//  Global Variables  //
 
 margin = 100;
 turnFactor = 0.02;
-minSpeed = 0.5;
-maxSpeed = 2;
+minSpeed = 0.25;
+maxSpeed = 3;
 avoidFactor = 0.002;
 centerFactor = 0.00008;
 matchFactor = 0.008;
+mouseFactor = 0;//0.0001;
 
 visRange = 100;
 protRange = 25;
 
 visRangeSquared = visRange * visRange;
 protRangeSquared = protRange * protRange;
+
+var mouse = {x: 0, y:0};
+
+// Global Variables //
 
 class Boid {
 	
@@ -114,8 +142,15 @@ class Boid {
 			this.vxAvg /= this.neighbours;
 			this.vyAvg /= this.neighbours;
 
-			this.velocity.x += (this.xAvg - this.x) * centerFactor + (this.vxAvg - this.velocity.x) * matchFactor;
-			this.velocity.y += (this.yAvg - this.y) * centerFactor + (this.vyAvg - this.velocity.y) * matchFactor;
+			this.velocity.x += (this.xAvg - this.x) * centerFactor
+			this.velocity.y += (this.yAvg - this.y) * centerFactor
+
+			this.velocity.x += (this.vxAvg - this.velocity.x) * matchFactor;
+			this.velocity.y += (this.vyAvg - this.velocity.y) * matchFactor;
+
+			this.velocity.x += (mouse.x - this.x) * mouseFactor;
+			this.velocity.y += (mouse.y - this.y) * mouseFactor;
+
 		}
 
 		// Avoid others
@@ -208,17 +243,20 @@ class Game {
 			var color;
 
 			if(c == "random") {
-				/*let r = 100 + randInt(0, 155);
+				/*
+				let r = 100 + randInt(0, 155);
 				let g = 0;
 				let b = randInt(0, 255);
 			
 				//let rgb = {r: 0, g: randInt(0,255), b:100 + randInt(0,155)}
 
-				color = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")";*/
+				color = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")";
+				*/
+				
 				color = randColor();
 			} else { 
 				//console.log(color);
-				color = mixColor(c, 50);
+				color = mixColor(c, 25);
 			}
 
 			this.entities.push(new Boid(randX, randY, randV, color));
@@ -265,8 +303,14 @@ class Game {
 var gameSpeed = 1000 / 144;
 var c = document.getElementById("canvas")
 var theGame = new Game(c, gameSpeed);
-theGame.populate("rgb(200,50,150)"); // "rgb(30,200,200)"
+theGame.populate("rgb(30, 100, 150)"); // "rgb(200,50,150)"
 
-//var gameSpeed2 = 1000 / 144;
-//var c2 = document.getElementById("canvas2")
-//var theGame = new Game(c2, gameSpeed2);
+// Event Listeners // 
+
+window.addEventListener("mousemove", function(event) {
+	var canObj = c.getBoundingClientRect()
+	mouse.x = event.clientX - canObj.left
+	mouse.y = event.clientY - canObj.top
+})
+
+// Event Listeners // 

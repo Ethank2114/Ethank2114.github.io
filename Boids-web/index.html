@@ -10,34 +10,66 @@
 		<div class="controllerBar">
 			<div class="controls">
 				<div class="controlHolder" name="minSpeedControls">
-					<input class="arrow" type="button" value="<">
-					<input class="slider" type="range">
-					<input class="arrow" type="button" value =">">
+					<label class="controlLabel">Min Speed</label>
+					<input class="arrow" type="button" id="minSpeedLeftArrow" value="<">
+					<input class="slider" type="range" id="minSpeedSlider" min="0.1" max="10" step="0.1" value="0.25">
+					<input class="arrow" type="button" id="minSpeedRightArrow" value =">">
+					<span class="sliderValue" id="minSpeedValue">0.25</span>
 				</div>
-				<div class="controlHolder" name="minSpeedControls">
-					<input class="arrow" type="button" value="<">
-					<input class="slider" type="range">
-					<input class="arrow" type="button" value =">">
+				<div class="controlHolder" name="maxSpeedControls">
+					<label class="controlLabel">Max Speed</label>
+					<input class="arrow" type="button" id="maxSpeedLeftArrow" value="<">
+					<input class="slider" type="range" id="maxSpeedSlider" min="0" max="15" step="0.1" value="3">
+					<input class="arrow" type="button" id="maxSpeedRightArrow" value =">">
+					<span class="sliderValue" id="maxSpeedValue">3</span>
 				</div>
-				<div class="controlHolder" name="minSpeedControls">
-					<input class="arrow" type="button" value="<">
-					<input class="slider" type="range">
-					<input class="arrow" type="button" value =">">
+				<div class="controlHolder" name="turnFactorControls">
+					<label class="controlLabel">Turn Factor</label>
+					<input class="arrow" type="button" id="turnFactorLeftArrow" value="<">
+					<input class="slider" type="range" id="turnFactorSlider" min="0" max="0.2" step="0.001" value="0.02">
+					<input class="arrow" type="button" id="turnFactorRightArrow" value =">">
+					<span class="sliderValue" id="turnFactorValue">0.02</span>
 				</div>
-				<div class="controlHolder" name="minSpeedControls">
-					<input class="arrow" type="button" value="<">
-					<input class="slider" type="range">
-					<input class="arrow" type="button" value =">">
+				<div class="controlHolder" name="avoidFactorControls">
+					<label class="controlLabel">Avoid Factor</label>
+					<input class="arrow" type="button" id="avoidFactorLeftArrow" value="<">
+					<input class="slider" type="range" id="avoidFactorSlider" min="0" max="0.02" step="0.0001" value="0.002">
+					<input class="arrow" type="button" id="avoidFactorRightArrow" value =">">
+					<span class="sliderValue" id="avoidFactorValue">0.002</span>
 				</div>
-				<div class="controlHolder" name="minSpeedControls">
-					<input class="arrow" type="button" value="<">
-					<input class="slider" type="range">
-					<input class="arrow" type="button" value =">">
+				<div class="controlHolder" name="centerFactorControls">
+					<label class="controlLabel">Center Factor</label>
+					<input class="arrow" type="button" id="centerFactorLeftArrow" value="<">
+					<input class="slider" type="range" id="centerFactorSlider" min="0" max="0.001" step="0.00001" value="0.00008">
+					<input class="arrow" type="button" id="centerFactorRightArrow" value =">">
+					<span class="sliderValue" id="centerFactorValue">0.00008</span>
+				</div>
+				<div class="controlHolder" name="matchFactorControls">
+					<label class="controlLabel">Match Factor</label>
+					<input class="arrow" type="button" id="matchFactorLeftArrow" value="<">
+					<input class="slider" type="range" id="matchFactorSlider" min="0" max="0.1" step="0.0008" value="0.008">
+					<input class="arrow" type="button" id="matchFactorRightArrow" value =">">
+					<span class="sliderValue" id="matchFactorValue">0.008</span>
+				</div>
+				<div class="controlHolder" name="mouseFactorControls">
+					<label class="controlLabel">Mouse Factor</label>
+					<input class="arrow" type="button" id="mouseFactorLeftArrow" value="<">
+					<input class="slider" type="range" id="mouseFactorSlider" min="0" max="0.001" step="0.00001" value="0">
+					<input class="arrow" type="button" id="mouseFactorRightArrow" value =">">
+					<span class="sliderValue" id="mouseFactorValue">0</span>
+				</div>
+				<div class="controlHolder" name="colorControls">
+					<label class="controlLabel">Color</label>
+					<!-- <input class="arrow" type="button" id="mouseFactorLeftArrow" value="<"> -->
+					<input class="color" type="color" id="colorSelector">
+					<!-- <input class="arrow" type="button" id="mouseFactorRightArrow" value =">"> -->
+					<span class="sliderValue" id="mouseFactorValue"></span>
 				</div>
 			</div>
 		</div>
 	</div>
 	
 	<script src="scripts/main.js"></script>
+	<script src="scripts/eventListeners.js"></script>
 </body>
 </html>
