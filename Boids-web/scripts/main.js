@@ -235,27 +235,12 @@ class Game {
 			let vy = randInt(-4, 4);
 
 			let randV = {x: vx, y: vy};
-
-			//let r = 100 + randInt(0, 155);
-			//let g = 0;
-			//let b = randInt(0, 255);
-
+			
 			var color;
 
-			if(c == "random") {
-				/*
-				let r = 100 + randInt(0, 155);
-				let g = 0;
-				let b = randInt(0, 255);
-			
-				//let rgb = {r: 0, g: randInt(0,255), b:100 + randInt(0,155)}
-
-				color = "rgb(" + r.toString() + "," + g.toString() + "," + b.toString() + ")";
-				*/
-				
+			if(c == "random") {				
 				color = randColor();
 			} else { 
-				//console.log(color);
 				color = mixColor(c, 25);
 			}
 
