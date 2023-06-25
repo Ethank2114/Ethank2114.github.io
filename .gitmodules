@@ -1,3 +1,6 @@
 [submodule "Boids-web"]
 	path = Boids-web
 	url = https://github.com/Ethank2114/Boids-web.git
+[submodule "Color-Paths"]
+	path = Color-Paths
+	url = https://github.com/Ethank2114/Color-Paths.git
