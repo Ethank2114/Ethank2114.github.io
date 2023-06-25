@@ -4,3 +4,6 @@
 [submodule "Color-Paths"]
 	path = Color-Paths
 	url = https://github.com/Ethank2114/Color-Paths.git
+[submodule "Soft-Bodies"]
+	path = Soft-Bodies
+	url = https://github.com/Ethank2114/Soft-Bodies.git
