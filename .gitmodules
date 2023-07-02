@@ -7,3 +7,6 @@
 [submodule "Soft-Bodies"]
 	path = Soft-Bodies
 	url = https://github.com/Ethank2114/Soft-Bodies.git
+[submodule "Branch-Patterns"]
+	path = Branch-Patterns
+	url = https://github.com/Ethank2114/Branch-Patterns.git
