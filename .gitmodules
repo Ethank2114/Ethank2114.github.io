@@ -10,3 +10,6 @@
 [submodule "Branch-Patterns"]
 	path = Branch-Patterns
 	url = https://github.com/Ethank2114/Branch-Patterns.git
+[submodule "Sands-Web"]
+	path = Sands-Web
+	url = https://github.com/Ethank2114/Sands-Web.git
