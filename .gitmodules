@@ -13,3 +13,6 @@
 [submodule "Sands-Web"]
 	path = Sands-Web
 	url = https://github.com/Ethank2114/Sands-Web.git
+[submodule "Graph-Traversal"]
+	path = Graph-Traversal
+	url = https://github.com/Ethank2114/Graph-Traversal.git
