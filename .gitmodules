@@ -16,3 +16,6 @@
 [submodule "Graph-Traversal"]
 	path = Graph-Traversal
 	url = https://github.com/Ethank2114/Graph-Traversal.git
+[submodule "Random-Walk"]
+	path = Random-Walk
+	url = https://github.com/Ethank2114/Random-Walk.git
