@@ -19,3 +19,6 @@
 [submodule "Random-Walk"]
 	path = Random-Walk
 	url = https://github.com/Ethank2114/Random-Walk.git
+[submodule "Project-Template"]
+	path = Project-Template
+	url = https://github.com/Ethank2114/Project-Template.git
