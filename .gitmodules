@@ -22,3 +22,6 @@
 [submodule "Project-Template"]
 	path = Project-Template
 	url = https://github.com/Ethank2114/Project-Template.git
+[submodule "Maze-Solver"]
+	path = Maze-Solver
+	url = ./Maze-Solver/
