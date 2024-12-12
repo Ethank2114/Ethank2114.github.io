@@ -24,4 +24,4 @@
 	url = https://github.com/Ethank2114/Project-Template.git
 [submodule "Maze-Solver"]
 	path = Maze-Solver
-	url = ./Maze-Solver/
+	url = https://github.com/Ethank2114/Maze-Solver.git
