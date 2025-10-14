@@ -25,3 +25,6 @@
 [submodule "Maze-Solver"]
 	path = Maze-Solver
 	url = https://github.com/Ethank2114/Maze-Solver.git
+[submodule "Maze-Solver"]
+	path = Ants-and-Slime
+	url = https://github.com/Ethank2114/Ants-and-Slime.git
