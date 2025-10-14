@@ -1,1 +1,1 @@
-Hello! This is a website to showcase my projects. Big WOW!
+Hello! This is a website to showcase my projects. Mainly filled with one-off ideas.
